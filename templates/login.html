@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#/">MenuView</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#/">Home</a>
+                </li>
+            </ul>
+            
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#/register">Register</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active"  href="#/login">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<div class="container mt-3">
+    <h1>Login</h1>
+    <hr>
+
+    <div class="alert alert-danger" ng-show="error">
+        <strong>Error!</strong> {{error}}
+    </div>
+
+    <form ng-submit="login()">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon">
+                    <i class="fas fa-envelope"></i>
+                </span>
+            </div>
+
+            <input class="form-control" ng-model="email" name="email" type="email" placeholder="Email" autofill="">
+        </div> 
+
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon">
+                    <i class="fas fa-key"></i>
+                </span>
+            </div>
+    
+            <input class="form-control" ng-model="password" name="password" type="password" placeholder="Password">
+        </div> 
+
+        <input class="btn btn-success" type="submit" value="Login"></button>
+    </form>
+</div>
