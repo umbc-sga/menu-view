@@ -136,9 +136,9 @@ app.controller("HomeCtrl", function($scope, UserActionService, CurrentUserServic
             $('[href="#' + getMealPeriod() + '"]').tab('show');
         }
 
-        // build data string with / because - was getting wonky behavior in php key retrieva
-        let dateString = $scope.menuDate.getFullYear() + "/";
-        dateString += ($scope.menuDate.getMonth() + 1) + "/";
+        // build date string
+        let dateString = $scope.menuDate.getFullYear() + "-";
+        dateString += ($scope.menuDate.getMonth() + 1) + "-";
         dateString += $scope.menuDate.getDate();
         
         fetch(`https://api.sga.umbc.edu/menus/${locationString}/${dateString}`)
