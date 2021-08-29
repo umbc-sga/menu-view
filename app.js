@@ -144,7 +144,6 @@ app.controller("HomeCtrl", function($scope, UserActionService, CurrentUserServic
         fetch(`https://api.sga.umbc.edu/menus/${locationString}/${dateString}`)
             .then(response => response.json())
             .then(data => {
-                let menuData = JSON.parse(JSON.stringify(data));
                     $scope.menu = {};
 
                     if (data.status == "error") {
@@ -158,9 +157,8 @@ app.controller("HomeCtrl", function($scope, UserActionService, CurrentUserServic
                         return;
                     }
 
-                    // Go through every meal period in menu
-                    let menuRaw = data.menu;
-                    for (let period of menuRaw.periods) {
+                    // go through every meal period in menu
+                    for (let period of data.periods) {
                         $scope.menu[period.name] = {};
 
                         // For each DHall subsection
