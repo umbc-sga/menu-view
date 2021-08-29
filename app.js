@@ -140,60 +140,38 @@ app.controller("HomeCtrl", function($scope, UserActionService, CurrentUserServic
         let dateString = $scope.menuDate.getFullYear() + "/";
         dateString += ($scope.menuDate.getMonth() + 1) + "/";
         dateString += $scope.menuDate.getDate();
-
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            data: { location: locationString, menuDate: dateString },
-            url: "ajax/get_menu.php",
-            success: function(data) {
+        
+        fetch(`https://api.sga.umbc.edu/menus/${locationString}/${dateString}`)
+            .then(response => response.json())
+            .then(data => {
                 let menuData = JSON.parse(JSON.stringify(data));
-                $scope.menu = {};
+                    $scope.menu = {};
 
-                if (menuData.status == "error") {
-                    // if there is a menu loading error, its becaus skylight isn't open that day
-                    $scope.menu["Lunch"] = {"No Menu Today, Skylight Closed": []};
+                    if (data.status == "error") {
+                        // if there is a menu loading error, its becaus skylight isn't open that day
+                        $scope.menu["Lunch"] = {"No Menu Today, Skylight Closed": []};
+
+                        // Update the angular scope to display on homepage
+                        $scope.$apply();
+
+                        // do not advance
+                        return;
+                    }
+
+                    // Go through every meal period in menu
+                    let menuRaw = data.menu;
+                    for (let period of menuRaw.periods) {
+                        $scope.menu[period.name] = {};
+
+                        // For each DHall subsection
+                        for (let category of period.categories)  
+                            if (!SAME_EVERYDAY.includes(category.name))
+                                $scope.menu[period.name][category.name] = category.items;  
+                    }
 
                     // Update the angular scope to display on homepage
                     $scope.$apply();
-
-                    // do not advance
-                    return;
-                }
-
-                // Go through every meal period in menu
-                let menuRaw = menuData.menu;
-                for (var period of menuRaw.periods) {
-                    $scope.menu[period.name] = {};
-
-                    // For each DHall subsection
-                    for (var category of period.categories)  
-                        if (!SAME_EVERYDAY.includes(category.name))
-                            $scope.menu[period.name][category.name] = category.items;  
-                }
-
-                // Update the angular scope to display on homepage
-                $scope.$apply();
-            },
-            error: function(jqXHR, exception) {
-                // https://stackoverflow.com/questions/3642348/jquery-ajax-error-callback
-                if (jqXHR.status === 0) {
-                    console.log('Not connect.\n Verify Network.');
-                } else if (jqXHR.status == 404) {
-                    console.log('Requested page not found. [404]');
-                } else if (jqXHR.status == 500) {
-                    console.log('Internal Server Error [500].');
-                } else if (exception === 'parsererror') {
-                    console.log('Requested JSON parse failed.');
-                } else if (exception === 'timeout') {
-                    console.log('Time out error.');
-                } else if (exception === 'abort') {
-                    console.log('Ajax request aborted.');
-                } else {
-                    console.log('Uncaught Error.\n' + jqXHR.responseText);
-                }
-            }
-        });
+            });
     }
 
     /**
